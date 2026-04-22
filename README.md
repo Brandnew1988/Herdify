@@ -24,8 +24,8 @@ It is built on top of [ralphify](https://github.com/computerlovetech/ralphify) a
 
 ### 1. Easy setup
 - Choose the project folder
-- Define which agent to use
 - Generate `RALPH.md` automatically
+- Start adding Task
 
 No manual editing of YAML frontmatter required.
 
