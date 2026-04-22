@@ -635,7 +635,7 @@ def _build_app(page: ft.Page) -> None:
         )
         if state.runner.start():
             _set_running(True)
-            _log("[herdify] Herding ralphify...")
+            _log("[herdify] Herding ralphfy...")
         else:
             _log("[herdify] Could not start - is ralphify installed?")
 

@@ -20,4 +20,4 @@
 - [x] Search files should be a dropdown with multi select
 - [x] fix errors: INFO:     ::1:51821 - "GET / HTTP/1.1" 404 Not Found
 - [x] Token cost does not work: Is it possible to hook into the underlying instance started by ralph to see the number of tokens used
-- [ ] Update output: Output should say  herding ralphify
+- [x] Update output: Output should say  herding ralphfy
