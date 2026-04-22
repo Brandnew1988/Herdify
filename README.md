@@ -81,12 +81,15 @@ uv run herdify
 
 ---
 
-## Roadmap (after v1)
+## Roadmap
 
 - **Memory** - persistent memory across iterations
 - **Iteration log** - inspect what the agent did in each iteration
 - **Token tracking** - monitor usage over time
 - **Multi-project** - manage multiple ralph from the same UI
+- **Support more languages for semantic code navigation** - extend symbol-aware navigation beyond Python
+- **Smarter code indexing** - improve file summaries, symbol discovery, and reference lookup for larger projects
+- **Better MCP visibility** - show the active MCP endpoint and tool status more clearly in the UI
 
 ---
 
