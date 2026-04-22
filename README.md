@@ -42,13 +42,21 @@ Herdify starts a local MCP server when a ralph session is running. The agent can
 
 | Tool | Description |
 |------|-------------|
+| `add_todo` | Creates a new pending task |
 | `get_todos` | Returns all tasks with status |
 | `complete_todo` | Marks a task as done |
+| `list_files` | Lists visible project files by glob pattern |
+| `list_symbols` | Lists Python classes and functions in a file |
+| `find_symbol` | Locates Python symbol definitions by exact name |
+| `find_references` | Searches likely symbol references across text files |
+| `get_file_summary` | Returns a compact file summary with Python symbols |
 | `get_project_structure` | Returns the project tree without file contents |
 | `get_symbol` | Fetches a function or class by name |
 | `search_code` | Simple text search across the codebase |
 
-This lets the agent spend fewer tokens navigating the project and only read full file contents when needed.
+This lets the agent spend fewer tokens navigating the project and only read full file contents when needed. The newer indexing-style tools are meant to make that cheaper still by letting the agent list files, inspect symbol inventories, and fetch compact summaries before reading code in full.
+
+At the moment, semantic symbol support is Python-only. Tools such as `get_symbol`, `list_symbols`, and `find_symbol` currently understand Python source files, while the more general navigation tools like `list_files`, `search_code`, `find_references`, and `get_file_summary` can still be useful across other text-based projects.
 
 ### 4. Ralph control
 Start and stop ralph loops directly from the UI with no terminal required.
