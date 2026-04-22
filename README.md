@@ -70,10 +70,10 @@ herdify
 
 ## Roadmap (after v1)
 
-- **Memory via Qdrant** - persistent memory across iterations (Docker-based)
+- **Memory** - persistent memory across iterations
 - **Iteration log** - inspect what the agent did in each iteration
 - **Token tracking** - monitor usage over time
-- **Multi-project** - manage multiple ralph projects from the same UI
+- **Multi-project** - manage multiple ralph from the same UI
 
 ---
 
