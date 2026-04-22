@@ -29,34 +29,34 @@ commands:
     run: python -c "from pathlib import Path; files=[str(p.relative_to('.')) for p in sorted(Path('.').rglob('*')) if p.is_file() and not any(x in p.parts for x in ('__pycache__','.git','.venv','venv','node_modules'))]; print('\\n'.join(files[:60]))"
 ---
 
-Du er en autonom kodnings-agent der arbejder i en loop.
+You are an autonomous coding agent working in a loop.
 
-## Dine opgaver
+## Your tasks
 
 {{ commands.todos }}
 
-## Projektstruktur
+## Project structure
 
 {{ commands.structure }}
 
-## Tilgængelige MCP-tools (herdify)
+## Available MCP tools (herdify)
 
-Herdify stiller følgende MCP-tools til rådighed via den registrerede `herdify` MCP-server:
+Herdify exposes the following MCP tools through the registered `herdify` MCP server:
 
-- `complete_todo(title)` — Markér en opgave som fuldført (opdaterer TODO.md via Herdify)
-- `get_todos()` — Hent aktuelle opgaver med status
-- `get_project_structure(max_depth)` — Hent projektets mappestruktur
-- `get_symbol(symbol_name)` — Find en funktion eller klasse i kodebasen
-- `search_code(query, file_pattern)` — Søg efter tekst i kodebasen
+- `complete_todo(title)` — Mark a task as completed (updates TODO.md through Herdify)
+- `get_todos()` — Fetch the current tasks with status
+- `get_project_structure(max_depth)` — Fetch the project folder structure
+- `get_symbol(symbol_name)` — Find a function or class in the codebase
+- `search_code(query, file_pattern)` — Search for text in the codebase
 
-## Regler
+## Rules
 
-1. Kig på dine opgaver ovenfor (markeret med `- [ ]`)
-2. Vælg ÉN opgave og løs den
-3. Brug MCP-tool `complete_todo` til at markere opgaven som fuldført — redigér IKKE TODO.md direkte
-4. Stop efter du har løst opgaven
+1. Review your tasks above (marked with `- [ ]`)
+2. Choose ONE task and complete it
+3. Use the MCP tool `complete_todo` to mark the task as completed - do NOT edit TODO.md directly
+4. Stop after completing the task
 
-Opfind ikke nye opgaver. Arbejd kun med hvad der er listet.
+Do not invent new tasks. Work only on what is listed.
 """
 
 
@@ -73,8 +73,8 @@ def ensure_ralphify(on_output: Callable[[str], None] | None = None) -> bool:
     uv = shutil.which("uv")
     if not uv:
         cb(
-            "[herdify] ADVARSEL: 'ralph' ikke fundet og 'uv' er ikke installeret.\n"
-            "          Installer ralphify manuelt: pip install ralphify\n"
+            "[herdify] WARNING: 'ralph' not found and 'uv' is not installed.\n"
+            "          Install ralphify manually: pip install ralphify\n"
         )
         return False
 
@@ -87,15 +87,15 @@ def ensure_ralphify(on_output: Callable[[str], None] | None = None) -> bool:
             timeout=120,
         )
         if result.returncode == 0:
-            cb("[herdify] ralphify installeret og klar.\n")
+            cb("[herdify] ralphify installed and ready.\n")
             return True
         cb(
-            f"[herdify] Fejl ved installation af ralphify:\n"
+            f"[herdify] Error installing ralphify:\n"
             f"{result.stderr.strip()}\n"
         )
         return False
     except Exception as exc:
-        cb(f"[herdify] Fejl ved installation af ralphify: {exc}\n")
+        cb(f"[herdify] Error installing ralphify: {exc}\n")
         return False
 
 
@@ -141,32 +141,32 @@ def check_and_upgrade_ralphify(on_output: Callable[[str], None] | None = None) -
         return
 
     if installed and installed == latest:
-        cb(f"[herdify] ralphify er opdateret (v{latest}).\n")
+        cb(f"[herdify] ralphify is up to date (v{latest}).\n")
         return
 
     # Upgrade
     uv = shutil.which("uv")
     if not uv:
         cb(
-            f"[herdify] Ny version af ralphify tilgængelig (v{latest})"
-            f"{' (installeret: v' + installed + ')' if installed else ''},"
-            " men 'uv' er ikke installeret.\n"
+            f"[herdify] New ralphify version available (v{latest})"
+            f"{' (installed: v' + installed + ')' if installed else ''},"
+            " but 'uv' is not installed.\n"
         )
         return
 
     version_info = f"v{installed} → v{latest}" if installed else f"v{latest}"
-    cb(f"[herdify] Opdaterer ralphify {version_info}…\n")
+    cb(f"[herdify] Upgrading ralphify {version_info}…\n")
     try:
         result = subprocess.run(
             [uv, "tool", "upgrade", "ralphify"],
             capture_output=True, text=True, timeout=120,
         )
         if result.returncode == 0:
-            cb(f"[herdify] ralphify opdateret til v{latest}.\n")
+            cb(f"[herdify] ralphify upgraded to v{latest}.\n")
         else:
-            cb(f"[herdify] Fejl ved opdatering: {result.stderr.strip()}\n")
+            cb(f"[herdify] Error during upgrade: {result.stderr.strip()}\n")
     except Exception as exc:
-        cb(f"[herdify] Fejl ved opdatering af ralphify: {exc}\n")
+        cb(f"[herdify] Error upgrading ralphify: {exc}\n")
 
 
 def generate_ralph_md(project_path: str) -> Path:
@@ -211,7 +211,7 @@ class RalphRunner:
             ralph_cmd = self._find_ralph_cmd()
             if ralph_cmd is None:
                 self.on_output(
-                    "[herdify] ERROR: Kan ikke finde 'ralph'. "
+                    "[herdify] ERROR: Cannot find 'ralph'. "
                     "Installer ralphify: uv tool install ralphify\n"
                 )
                 return False
@@ -229,7 +229,7 @@ class RalphRunner:
                 )
             except FileNotFoundError:
                 self.on_output(
-                    "[herdify] ERROR: Kan ikke starte ralph. "
+                    "[herdify] ERROR: Cannot start ralph. "
                     "Installer ralphify: uv tool install ralphify\n"
                 )
                 return False

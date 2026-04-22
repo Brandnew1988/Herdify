@@ -51,7 +51,7 @@ def _ensure_claude_mcp() -> tuple[bool, str]:
     """
     claude = shutil.which("claude")
     if not claude:
-        return False, "claude CLI ikke fundet — installer Claude Code først."
+        return False, "Claude CLI not found - install Claude Code first."
 
     mcp_url = f"http://localhost:{get_port()}/mcp"
 
@@ -72,10 +72,10 @@ def _ensure_claude_mcp() -> tuple[bool, str]:
             capture_output=True, text=True, timeout=15,
         )
         if result.returncode == 0:
-            return True, f"MCP server '{MCP_SERVER_NAME}' registreret (port {get_port()})."
-        return False, f"Kunne ikke tilføje MCP: {result.stderr.strip()}"
+            return True, f"MCP server '{MCP_SERVER_NAME}' registered (port {get_port()})."
+        return False, f"Could not add MCP: {result.stderr.strip()}"
     except Exception as exc:
-        return False, f"Fejl: {exc}"
+        return False, f"Error: {exc}"
 
 # ---------------------------------------------------------------------------
 # Colours
@@ -123,7 +123,7 @@ def _build_app(page: ft.Page) -> None:
     state.mcp_thread = start_server()
 
     # Register MCP server in Claude's global config (one-time, background)
-    mcp_dot = ft.Icon(ft.Icons.CIRCLE, color=ORANGE, size=8, tooltip="MCP: tjekker…")
+    mcp_dot = ft.Icon(ft.Icons.CIRCLE, color=ORANGE, size=8, tooltip="MCP: checking…")
 
     def _register_mcp() -> None:
         ok, msg = _ensure_claude_mcp()
@@ -134,7 +134,7 @@ def _build_app(page: ft.Page) -> None:
     threading.Thread(target=_register_mcp, daemon=True).start()
 
     # Check / install ralphify on startup (background)
-    ralph_dot = ft.Icon(ft.Icons.CIRCLE, color=ORANGE, size=8, tooltip="ralphify: tjekker…")
+    ralph_dot = ft.Icon(ft.Icons.CIRCLE, color=ORANGE, size=8, tooltip="ralphify: checking…")
 
     def _check_ralphify() -> None:
         def _cb(msg: str) -> None:
@@ -143,7 +143,7 @@ def _build_app(page: ft.Page) -> None:
 
         ok = ensure_ralphify(on_output=_cb)
         ralph_dot.color = GREEN if ok else RED
-        ralph_dot.tooltip = "ralphify: klar" if ok else "ralphify: ikke installeret"
+        ralph_dot.tooltip = "ralphify: ready" if ok else "ralphify: not installed"
         page.update()
 
         if ok:
@@ -159,7 +159,7 @@ def _build_app(page: ft.Page) -> None:
     page.services.append(file_picker)
 
     path_field = ft.TextField(
-        hint_text="Vælg projekt-mappe…",
+        hint_text="Choose project folder...",
         expand=True,
         read_only=True,
         bgcolor=PANEL,
@@ -176,7 +176,7 @@ def _build_app(page: ft.Page) -> None:
     status_label = ft.Text("Stopped", size=13, color=TEXT_DIM)
 
     _total_cost: list[float] = [0.0]
-    cost_label = ft.Text("$0.0000", size=12, color=TEXT_DIM, tooltip="Akkumuleret token-omkostning siden seneste start")
+    cost_label = ft.Text("$0.0000", size=12, color=TEXT_DIM, tooltip="Accumulated token cost since the last start")
 
     start_btn = ft.ElevatedButton(
         "Start",
@@ -247,7 +247,7 @@ def _build_app(page: ft.Page) -> None:
     # ------------------------------------------------------------------ #
 
     _dialog_title_field = ft.TextField(
-        label="Titel",
+        label="Title",
         autofocus=True,
         bgcolor=PANEL,
         border_color=BORDER,
@@ -257,7 +257,7 @@ def _build_app(page: ft.Page) -> None:
         border_radius=8,
     )
     _dialog_desc_field = ft.TextField(
-        label="Beskrivelse (valgfri)",
+        label="Description (optional)",
         multiline=True,
         min_lines=3,
         max_lines=6,
@@ -277,11 +277,11 @@ def _build_app(page: ft.Page) -> None:
 
     # --- Multi-select dropdown for file suggestions ---
     _files_dropdown_open: list[bool] = [False]
-    _files_dropdown_label = ft.Text("Vælg relevante filer…", size=12, color=TEXT_DIM, expand=True)
+    _files_dropdown_label = ft.Text("Choose relevant files...", size=12, color=TEXT_DIM, expand=True)
     _files_dropdown_arrow = ft.Icon(ft.Icons.ARROW_DROP_DOWN, color=TEXT_DIM, size=20)
 
     _files_inner_search = ft.TextField(
-        hint_text="Filtrer filer…",
+        hint_text="Filter files...",
         bgcolor=PANEL,
         border_color=BORDER,
         focused_border_color=ACCENT,
@@ -319,10 +319,10 @@ def _build_app(page: ft.Page) -> None:
     def _update_dropdown_label() -> None:
         n = len(_selected_files[0])
         if n == 0:
-            _files_dropdown_label.value = "Vælg relevante filer…"
+            _files_dropdown_label.value = "Choose relevant files..."
             _files_dropdown_label.color = TEXT_DIM
         else:
-            _files_dropdown_label.value = f"{n} fil{'er' if n > 1 else ''} valgt"
+            _files_dropdown_label.value = f"{n} file{'s' if n > 1 else ''} selected"
             _files_dropdown_label.color = TEXT
 
     def _rebuild_file_list(query: str) -> None:
@@ -429,7 +429,7 @@ def _build_app(page: ft.Page) -> None:
     def _save_task(_: ft.ControlEvent) -> None:
         title = (_dialog_title_field.value or "").strip()
         if not title:
-            _dialog_error.value = "Titel må ikke være tom."
+            _dialog_error.value = "Title cannot be empty."
             page.update()
             return
         desc = (_dialog_desc_field.value or "").strip()
@@ -461,12 +461,12 @@ def _build_app(page: ft.Page) -> None:
         ),
         actions=[
             ft.TextButton(
-                "Annuller",
+                "Cancel",
                 style=ft.ButtonStyle(color=TEXT_DIM),
                 on_click=lambda _: page.pop_dialog(),
             ),
             ft.ElevatedButton(
-                "Gem",
+                "Save",
                 style=ft.ButtonStyle(
                     bgcolor=ACCENT,
                     color=ft.Colors.WHITE,
@@ -501,7 +501,7 @@ def _build_app(page: ft.Page) -> None:
             color=TEXT_DIM,
         ) if task.description else None
         files_label = ft.Text(
-            "Filer: " + ", ".join(task.files[:3]) + ("…" if len(task.files) > 3 else ""),
+            "Files: " + ", ".join(task.files[:3]) + ("..." if len(task.files) > 3 else ""),
             size=10,
             color=TEXT_DIM,
             italic=True,
@@ -532,20 +532,20 @@ def _build_app(page: ft.Page) -> None:
                         content=done_icon,
                         on_tap=_toggle_status,
                         mouse_cursor=ft.MouseCursor.CLICK,
-                        tooltip="Markér som done / genåbn",
+                        tooltip="Mark as done / reopen",
                     ),
                     ft.GestureDetector(
                         content=title_col,
                         on_tap=lambda _, t=task: _open_task_dialog(t),
                         mouse_cursor=ft.MouseCursor.CLICK,
-                        tooltip="Rediger",
+                        tooltip="Edit",
                         expand=True,
                     ),
                     ft.IconButton(
                         icon=ft.Icons.CLOSE_ROUNDED,
                         icon_color=TEXT_DIM,
                         icon_size=14,
-                        tooltip="Slet",
+                        tooltip="Delete",
                         on_click=_delete,
                         style=ft.ButtonStyle(
                             padding=ft.padding.all(4),
@@ -566,7 +566,7 @@ def _build_app(page: ft.Page) -> None:
         task_list.controls.clear()
         if not state.project_path:
             task_list.controls.append(
-                ft.Text("Vælg en mappe for at se tasks.", size=12, color=TEXT_DIM)
+                ft.Text("Choose a folder to view tasks.", size=12, color=TEXT_DIM)
             )
             page.update()
             return
@@ -577,7 +577,7 @@ def _build_app(page: ft.Page) -> None:
 
         if not tasks:
             task_list.controls.append(
-                ft.Text("Ingen tasks endnu — tryk + for at tilføje.", size=12, color=TEXT_DIM)
+                ft.Text("No tasks yet - press + to add one.", size=12, color=TEXT_DIM)
             )
         else:
             if pending:
@@ -595,7 +595,7 @@ def _build_app(page: ft.Page) -> None:
             if done:
                 task_list.controls.append(
                     ft.Text(
-                        f"FULDFØRT ({len(done)})",
+                        f"COMPLETED ({len(done)})",
                         size=10,
                         weight=ft.FontWeight.BOLD,
                         color=TEXT_DIM,
@@ -620,11 +620,11 @@ def _build_app(page: ft.Page) -> None:
 
     def _on_stopped() -> None:
         _set_running(False)
-        _log("[herdify] Agent stoppet.")
+        _log("[herdify] Agent stopped.")
 
     def _start(_: ft.ControlEvent) -> None:
         if not state.project_path:
-            _log("[herdify] Vælg en projektmappe først.")
+            _log("[herdify] Choose a project folder first.")
             return
         _total_cost[0] = 0.0
         cost_label.value = "$0.0000"
@@ -635,15 +635,15 @@ def _build_app(page: ft.Page) -> None:
         )
         if state.runner.start():
             _set_running(True)
-            _log("[herdify] Agent startet.")
+            _log("[herdify] Agent started.")
         else:
-            _log("[herdify] Kunne ikke starte — er ralphify installeret?")
+            _log("[herdify] Could not start - is ralphify installed?")
 
     def _stop(_: ft.ControlEvent) -> None:
         if state.runner:
             state.runner.stop()
         _set_running(False)
-        _log("[herdify] Stop signal sendt.")
+        _log("[herdify] Stop signal sent.")
 
     start_btn.on_click = _start
 
@@ -669,7 +669,7 @@ def _build_app(page: ft.Page) -> None:
                 if state.runner and state.runner.running:
                     tasks = load_tasks(state.project_path)
                     if tasks and all(t.done for t in tasks):
-                        _log("[herdify] Alle tasks er fuldført — stopper agent automatisk.")
+                        _log("[herdify] All tasks are completed - stopping agent automatically.")
                         state.runner.stop()
 
     threading.Thread(target=_watch_todo, daemon=True).start()
@@ -701,7 +701,7 @@ def _build_app(page: ft.Page) -> None:
     # ------------------------------------------------------------------ #
 
     async def _browse(_: ft.ControlEvent) -> None:
-        path = await file_picker.get_directory_path(dialog_title="Vælg projektmappe")
+        path = await file_picker.get_directory_path(dialog_title="Choose project folder")
         if not path:
             return
         path_field.value = path
@@ -723,7 +723,7 @@ def _build_app(page: ft.Page) -> None:
                 ft.Icon(ft.Icons.FOLDER_ROUNDED, color=ACCENT, size=18),
                 path_field,
                 ft.ElevatedButton(
-                    "Vælg mappe",
+                    "Choose folder",
                     icon=ft.Icons.FOLDER_OPEN_ROUNDED,
                     on_click=_browse,
                     style=ft.ButtonStyle(
@@ -770,7 +770,7 @@ def _build_app(page: ft.Page) -> None:
                             icon=ft.Icons.ADD_ROUNDED,
                             icon_color=ACCENT,
                             icon_size=18,
-                            tooltip="Ny task",
+                            tooltip="New task",
                             on_click=lambda _: _open_task_dialog(),
                             style=ft.ButtonStyle(
                                 padding=ft.padding.all(4),
@@ -803,7 +803,7 @@ def _build_app(page: ft.Page) -> None:
                                 color=TEXT_DIM, style=ft.TextStyle(letter_spacing=1.2)),
                         ft.Container(expand=True),
                         ft.TextButton(
-                            "Ryd",
+                            "Clear",
                             style=ft.ButtonStyle(color=TEXT_DIM),
                             on_click=_clear_log,
                         ),
@@ -828,7 +828,7 @@ def _build_app(page: ft.Page) -> None:
         if not state.project_path:
             git_list.controls.clear()
             git_list.controls.append(
-                ft.Text("Vælg en mappe for at se git historik.", size=12, color=TEXT_DIM)
+                ft.Text("Choose a folder to view git history.", size=12, color=TEXT_DIM)
             )
             page.update()
             return
@@ -846,7 +846,7 @@ def _build_app(page: ft.Page) -> None:
         git_list.controls.clear()
         if not lines:
             git_list.controls.append(
-                ft.Text("Ingen commits fundet.", size=12, color=TEXT_DIM)
+                ft.Text("No commits found.", size=12, color=TEXT_DIM)
             )
         else:
             for line in lines:
@@ -903,7 +903,7 @@ def _build_app(page: ft.Page) -> None:
                             icon=ft.Icons.REFRESH_ROUNDED,
                             icon_color=TEXT_DIM,
                             icon_size=16,
-                            tooltip="Opdater git historik",
+                            tooltip="Refresh git history",
                             on_click=lambda _: threading.Thread(
                                 target=_load_git_history, daemon=True
                             ).start(),
