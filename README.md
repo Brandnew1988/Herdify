@@ -67,6 +67,14 @@ uv run herdify
 
 ---
 
+## Current limitations
+
+- Semantic code navigation is currently Python-only.
+- Tools such as `get_symbol`, `list_symbols`, and `find_symbol` currently work on Python source files.
+- Broader tools such as `list_files`, `search_code`, `find_references`, and `get_file_summary` can still be useful for other text-based projects, but they do not yet provide language-aware symbol support outside Python.
+
+---
+
 ## Roadmap (after v1)
 
 - **Memory** - persistent memory across iterations
