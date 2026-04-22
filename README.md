@@ -23,7 +23,6 @@ It is built on top of [ralphify](https://github.com/computerlovetech/ralphify) a
 ## Features in v1
 
 ### 1. Easy setup
-`herdify init` guides you through setting up a new ralph project:
 - Choose the project folder
 - Define which agent to use
 - Generate `RALPH.md` automatically
