@@ -63,7 +63,7 @@ Start and stop ralph loops directly from the UI with no terminal required.
 uv add herdify
 
 # Open the app
-herdify
+uv run herdify
 ```
 
 ---
