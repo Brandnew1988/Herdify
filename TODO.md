@@ -1,0 +1,23 @@
+# TODO
+
+- [x] Validate kode: Check the code and add new TODOs if you find any parts that do not follow best practices.
+- [x] fix main.py:417 — move `import time` and `from pathlib import Path` out of `_watch_todo` function body to module-level imports
+- [x] fix ralph.py:51 — remove unused `mcp_port: int = 0` parameter from `generate_ralph_md` (dead code)
+- [x] fix ralph.py:138 — move the two `RuntimeError` guard raises inside the `try` block in `_stream_output` so `_running` is reset and `on_stopped` is called even if the guards fire
+- [x] fix main.py:511 — replace lambda+setattr workaround with a named `_clear_log` function for the "Ryd" button click handler
+- [x] fix ralph.py:136 — wrap stdout iteration in try/except in `_stream_output` so that `_running` is reset and `on_stopped` is called even if reading fails
+- [x] fix main.py:179 — simplify `_log` line-joining logic: replace splitlines+join+conditional with `text.rstrip("\n")`
+- [x] Get latest ralphify version: check https://github.com/computerlovetech/ralphify when the ui starts up it should check for lateste version of ralphify
+- [x] Ralphify: ralphify should use mcp endpoint to update todo.md and other proccess supported by the ui
+- [x] Task setup: When creating a new task you should be able to adde a "suggestion list" with relevent files
+- [x] Add token cost: see if it's possible to get token cost
+- [x] Add sidebar with git history: add site bar with git history
+- [x] Add options to work on multiple project at the same time: Add options to work on multiple project at the same time. My idea is that you can choose multiple folder for different project and each project have it own ralphify loop
+- [x] Task list  have a completed list and a todo list
+- [x] when no more task found Ralphify should auto stop
+- [x] Check if ralphify is install if not install
+- [x] Load git history when a todo is update and during project load
+- [x] Search files should be a dropdown with multi select
+- [x] fix errors: INFO:     ::1:51821 - "GET / HTTP/1.1" 404 Not Found
+- [x] Token cost virker ikke: Er det muligt at hook op på den underliggende instance der startes af ralp for at se antal token brugt
+- [ ] Update output: Output should say  herding ralphify
