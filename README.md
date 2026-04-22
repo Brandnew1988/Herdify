@@ -54,9 +54,7 @@ Herdify starts a local MCP server when a ralph session is running. The agent can
 | `get_symbol` | Fetches a function or class by name |
 | `search_code` | Simple text search across the codebase |
 
-This lets the agent spend fewer tokens navigating the project and only read full file contents when needed. The newer indexing-style tools are meant to make that cheaper still by letting the agent list files, inspect symbol inventories, and fetch compact summaries before reading code in full.
-
-At the moment, semantic symbol support is Python-only. Tools such as `get_symbol`, `list_symbols`, and `find_symbol` currently understand Python source files, while the more general navigation tools like `list_files`, `search_code`, `find_references`, and `get_file_summary` can still be useful across other text-based projects.
+This is an attempt to reduce token usage during project navigation. Instead of reading full files up front, the agent can list files, inspect symbol inventories, and fetch compact summaries before deciding what code to read in full.
 
 ### 4. Ralph control
 Start and stop ralph loops directly from the UI with no terminal required.
@@ -77,7 +75,7 @@ uv run herdify
 
 ## Current limitations
 
-- Semantic code navigation is currently Python-only.
+- Semantic code navigation is currently Python-only and is currently an attempt to save tokens during code navigation.
 - Tools such as `get_symbol`, `list_symbols`, and `find_symbol` currently work on Python source files.
 - Broader tools such as `list_files`, `search_code`, `find_references`, and `get_file_summary` can still be useful for other text-based projects, but they do not yet provide language-aware symbol support outside Python.
 
